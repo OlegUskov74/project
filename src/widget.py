@@ -1,14 +1,34 @@
-import masks
-from typing import Union
-
-def mask_account_card(type_card_or_account_number: Union[str, int]) -> str:
-    """функция, которая умеет обрабатывать информацию как о картах, так и о счетах"""
-
-
-    pass
-
-
 from datetime import datetime
+
+import masks
+
+
+def mask_account_card(type_card_or_account_number: str) -> str:
+    """функция, которая умеет обрабатывать информацию как о картах, так и о счетах"""
+    account_list = type_card_or_account_number.split()
+    # print(account_list)
+    text_part = []
+    digital_part = " "
+    if "Счет" in account_list:
+        for i in account_list:
+            if i.isalpha():
+                text_part.append(i)
+            else:
+                digital_part += i
+                mask_work = masks.get_mask_account(digital_part)
+    else:
+        for i in account_list:
+            if i.isalpha():
+                text_part.append(i)
+            else:
+                digital_part += i
+                mask_work = masks.get_mask_card_number(digital_part)
+    card_name_string = " ".join(text_part)
+    return f"{card_name_string} {mask_work}"
+
+
+print(mask_account_card("Visa Classic 6831982476737658"))
+print(mask_account_card("Счет 64686473678894779589"))
 
 
 def get_date(my_date: str) -> str:
